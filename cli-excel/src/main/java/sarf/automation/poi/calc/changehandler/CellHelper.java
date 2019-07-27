@@ -36,15 +36,13 @@ public interface CellHelper {
   static Optional<Sheet> findSheet(SheetHandler sheetHandler, String sheet) {
     if(sheet.toLowerCase().startsWith("sheet:")) {
       Pattern p = Pattern.compile(sheet.substring(6));
-      return sheetHandler.getSheets().stream()
-                         .filter(s -> p.matcher(s.getSheetName()).find())
-                         .findAny();
+      return Optional.ofNullable(sheetHandler.findSheet(s -> p.matcher(s.getSheetName()).find()));
     }
     return Optional.empty();
   }
 
   static Optional<Sheet> getSheetByName(SheetHandler sheetHandler, String sheet) {
-    return optMap(sheet, sheetHandler.getByName()::get);
+    return optMap(sheet, sheetHandler::getByName);
   }
 
   static Optional<Sheet> getSheetByNumber(SheetHandler sheetHandler, String sheet) {
@@ -63,10 +61,7 @@ public interface CellHelper {
     if (sheetNumber == null) {
       return null;
     }
-    List<Sheet> sheets = sheetHandler.getSheets();
-    return optFilter(sheetNumber, indexValid(sheets))
-        .map(sheets::get)
-        .orElse(null);
+    return sheetHandler.getSheetByIndex(sheetNumber);
   }
 
   static Cell getCellByExact(Sheet sheet, int row, int column) {

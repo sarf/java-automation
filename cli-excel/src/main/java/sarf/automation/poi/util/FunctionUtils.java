@@ -4,6 +4,8 @@ import static sarf.automation.poi.util.PredicateUtils.always;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -48,7 +50,7 @@ public interface FunctionUtils {
     return useDefaultValue.apply(entity) ? defaultValueSupplier.get() : entity;
   }
 
-  static <T,U> T feedFuncIgnore(T entity, Function<T,U> consumer) {
+  static <T, U> T feedFuncIgnore(T entity, Function<T, U> consumer) {
     if (entity != null) {
       consumer.apply(entity);
     }
@@ -66,11 +68,11 @@ public interface FunctionUtils {
     return entity;
   }
 
-  static <T,V> Supplier<V> supplyToFunc(Supplier<T> supplier, Function<T,V> func) {
+  static <T, V> Supplier<V> supplyToFunc(Supplier<T> supplier, Function<T, V> func) {
     return () -> func.apply(supplier.get());
   }
 
-  static <T,U, R> T perform(T entity, U other, BiFunction<T, U, R> consumer) {
+  static <T, U, R> T perform(T entity, U other, BiFunction<T, U, R> consumer) {
     if (entity != null) {
       consumer.apply(entity, other);
     }
@@ -80,6 +82,7 @@ public interface FunctionUtils {
   static <T> T consumeRecycle(T consumedYetWhole, Consumer<T> consumer) {
     return consumeRecycle(consumedYetWhole, Objects::nonNull, consumer);
   }
+
   static <T> T consumeRecycle(T consumedYetWhole, Predicate<T> predicate, Consumer<T> consumer) {
     if (predicate.test(consumedYetWhole)) {
       consumer.accept(consumedYetWhole);
@@ -88,7 +91,7 @@ public interface FunctionUtils {
   }
 
   static <T> T doIf(T entity, Predicate<T> predicate, Consumer<T> consumer) {
-    if(predicate.test(entity)) {
+    if (predicate.test(entity)) {
       consumer.accept(entity);
     }
     return entity;
@@ -112,5 +115,21 @@ public interface FunctionUtils {
 
   static <T> Supplier<T> doIfNNS(Supplier<T> entity, Consumer<T> consumer) {
     return () -> doIf(entity.get(), Objects::nonNull, consumer);
+  }
+
+  static <T> Consumer<T> toConsumer(Runnable action) {
+    return c -> action.run();
+  }
+
+  static Runnable doOnce(Runnable action) {
+    AtomicReference<Runnable> execute = new AtomicReference<>(action);
+    return () -> {
+      execute.getAndUpdate(r -> nopRunnable()).run();
+    };
+  }
+
+  static Runnable nopRunnable() {
+    return () -> {
+    };
   }
 }

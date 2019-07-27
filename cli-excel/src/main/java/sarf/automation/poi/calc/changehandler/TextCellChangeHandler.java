@@ -1,5 +1,7 @@
 package sarf.automation.poi.calc.changehandler;
 
+import static sarf.automation.poi.calc.changehandler.CellHelper.getSheet;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Stream;
@@ -19,8 +21,11 @@ public class TextCellChangeHandler<T> extends ChangeHandlerBase<TextCellChange> 
 
   @Override
   public Collection<CellChange> performActual(WorkFile workFile, TextCellChange change) {
-    Sheet sheet = CellHelper.getSheet(workFile.getSheetHandler(), change.getSheet());
+    Sheet sheet = getSheet(workFile.getSheetHandler(), change.getSheet());
+
+    // Cell is contained so it can be changed as it goes along
     Contained<Cell> cell = new Contained<>(CellHelper.getCell(sheet, change.getCell()));
+
     splitToStream(change.getValue())
         .forEach(value -> editCellAndAdvance(value, cell, change.isShouldTransform()));
     return Collections.emptySet();

@@ -1,12 +1,15 @@
 package sarf.automation.poi.calc.changehandler;
 
 import static sarf.automation.poi.calc.CalcUtils.cellLocationToString;
+import static sarf.automation.poi.calc.SheetHandler.sheetToCells;
 import static sarf.automation.poi.calc.changehandler.CellHelper.getCell;
 import static sarf.automation.poi.calc.changehandler.CellHelper.getCellByExact;
 import static sarf.automation.poi.util.FunctionUtils.optMap;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -21,6 +24,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Sheet;
+import sarf.automation.poi.calc.SheetHandler;
 import sarf.automation.poi.calc.WorkFile;
 import sarf.automation.poi.change.CellChange;
 import sarf.automation.poi.change.FindCellChange;
@@ -40,13 +44,17 @@ public class FindCellChangeHandler extends ChangeHandlerBase<FindCellChange> {
   @Override
   public Collection<CellChange> performActual(WorkFile workFile, FindCellChange change) {
     Sheet sheet = CellHelper.getSheet(workFile.getSheetHandler(), change.getSheet());
-    Cell cell = findCell(sheet, change.getSoughtCell());
-    if (cell != null) {
-      cell = getAdjustedCell(sheet, cell, change.getOffset());
-      return Collections
-          .singleton(new TextCellChange(change.getSheet(), cellLocationToString(cell), change.getValue()));
+    TextCellChange textCellChange = Optional.ofNullable(findCell(sheet, change.getSoughtCell()))
+                                            .map(cell -> getAdjustedCell(sheet, cell, change.getOffset()))
+                                            .map(cell -> new TextCellChange(change.getSheet(),
+                                                                            cellLocationToString(cell),
+                                                                            change.getValue()))
+                                            .orElse(null);
+    if (textCellChange != null) {
+      return Collections.singleton(textCellChange);
+    } else {
+      return Collections.emptySet();
     }
-    return Collections.emptySet();
   }
 
   private Cell getAdjustedCell(Sheet sheet, Cell cell, String offset) {
@@ -60,20 +68,30 @@ public class FindCellChangeHandler extends ChangeHandlerBase<FindCellChange> {
   private Cell findCell(Sheet sheet, String soughtCell) {
     Predicate<Cell> first = PredicateUtils.notNull();
     Collection<Predicate<Cell>> predicates = createPredicates(first, soughtCell);
+    return predicates.stream()
+                     .map(p -> sheetToCells(sheet).filter(p))
+                     .flatMap(s -> s)
+                     .findAny()
+                     .orElse(null);
+    //return findCell(sheet, predicates).findAny().orElse(null);
+  }
+
+  private Stream<Cell> findCell(Sheet sheet, Collection<Predicate<Cell>> predicates) {
     int lastRowNum = sheet.getLastRowNum();
-    for (Predicate predicate : predicates) {
+
+    for (Predicate<Cell> predicate : predicates) {
       for (int index = sheet.getFirstRowNum(); index < lastRowNum; index++) {
         Row row = sheet.getRow(index);
         short lastCellNum = row.getLastCellNum();
         for (short colIndex = row.getFirstCellNum(); colIndex < lastCellNum; colIndex++) {
           Cell cell = row.getCell(colIndex, MissingCellPolicy.RETURN_BLANK_AS_NULL);
           if (predicate.test(cell)) {
-            return cell;
+            return Stream.of(cell);
           }
         }
       }
     }
-    return null;
+    return Stream.empty();
   }
 
   private static Collection<Predicate<Cell>> createPredicates(Predicate<Cell> mandatory, String soughtCell) {

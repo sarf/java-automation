@@ -1,5 +1,9 @@
 package sarf.automation.poi.calc;
 
+import static sarf.automation.poi.util.FunctionUtils.consumeRecycle;
+import static sarf.automation.poi.util.FunctionUtils.doOnce;
+import static sarf.automation.poi.util.FunctionUtils.toConsumer;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,9 +11,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 import java.util.logging.Logger;
 import lombok.Data;
 import lombok.NonNull;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import sarf.automation.poi.calc.changehandler.ChangeHandler;
@@ -34,10 +44,37 @@ public class WorkFile {
   }
 
   public void saveFile(File outputFile) throws IOException {
+    updateSheets(sheetHandler.getRetrievedTracker().getSheets());
     try (FileOutputStream fos = new FileOutputStream(outputFile)) {
       workbook.write(fos);
     }
   }
+
+  private void updateSheets(Set<Sheet> sheets) {
+    FormulaEvaluator formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
+    final AtomicBoolean hadFormulas = new AtomicBoolean(false);
+    Runnable hadFormula = doOnce(handleHadFormulas(hadFormulas));
+    boolean hadError = sheets.stream()
+                             .map(SheetHandler::sheetToCells)
+                             .flatMap(Function.identity())
+                             .filter(c -> CellType.FORMULA.equals(c.getCellType()))
+                             .map(s -> consumeRecycle(s, toConsumer(hadFormula)))
+                             .map(formulaEvaluator::evaluateFormulaCell)
+                             .anyMatch(CellType.ERROR::equals);
+    if (hadError) {
+      logger.warning(() -> String.format("Some formulas in the sheets could not be updated.%n%s",
+                                         "The document will now trigger client application update on open."));
+      workbook.setForceFormulaRecalculation(true);
+    }
+  }
+
+  private Runnable handleHadFormulas(AtomicBoolean hadFormulas) {
+    return () -> {
+      hadFormulas.set(true);
+      logger.info("Some of the sheets edited had formulas, attempting to update them.");
+    };
+  }
+
 
   @SuppressWarnings("unchecked")
   public <T extends CellChange> Collection<T> handleChange(T change) {

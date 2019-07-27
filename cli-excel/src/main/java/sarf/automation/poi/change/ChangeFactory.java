@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
-import sarf.automation.poi.ApplicationCommands.Command;
+import sarf.automation.poi.commands.Command;
 
 public class ChangeFactory {
 
@@ -57,8 +57,8 @@ public class ChangeFactory {
                    .orElse(null);
   }
 
-  public static CellChange from(Command command) {
-    if (command == null) {
+  public static CellChange from(Command command, List<String> options) {
+    if (command == null || options == null) {
       return null;
     }
     Class<?> changeClass = findInFirstCome(CHANGE_MAP.keySet(), n -> command.getName().equals(n),
@@ -69,11 +69,12 @@ public class ChangeFactory {
       return invoke(null, CellChange.class,
                     Stream.of(changeClass.getMethods())
                           .filter(m -> Modifier.isStatic(m.getModifiers()))
-                          .filter(m -> m.getParameterCount() == 1)
+                          .filter(m -> m.getParameterCount() == 2)
                           .filter(m -> command.getClass().isAssignableFrom(m.getParameterTypes()[0]))
+                          .filter(m -> List.class.isAssignableFrom(m.getParameterTypes()[1]))
                           .filter(m -> CellChange.class.isAssignableFrom(m.getReturnType()))
                           .findAny()
-                          .orElse(null), command);
+                          .orElse(null), command, options);
     }
 
     return null;

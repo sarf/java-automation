@@ -1,9 +1,10 @@
 package sarf.automation.poi.change;
 
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import sarf.automation.poi.ApplicationCommands.Command;
+import sarf.automation.poi.commands.Command;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -26,17 +27,18 @@ public class TextCellChange extends CellChange {
   public static String getCommandName() {
     return "edit";
   }
-  public static TextCellChange toTextCellChange(Command command) {
-    String sheet = command.getStrings().get(0);
+  public static TextCellChange toTextCellChange(Command command, List<String> options) {
+    List<String> strings = options;
+    String sheet = strings.get(0);
     String cell;
     String[] sheetSplit = sheet.split("!");
     if (sheetSplit.length > 1) {
       sheet = sheetSplit[0];
       cell = sheetSplit[1];
     } else {
-      cell = command.getStrings().get(1);
+      cell = strings.get(1);
     }
-    String value = ChangeFactory.getLast(command.getStrings());
+    String value = ChangeFactory.getLast(strings);
     return new TextCellChange(sheet, cell, value);
   }
 

@@ -5,9 +5,8 @@ import static sarf.automation.poi.util.StringUtils.isEmpty;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NonNull;
 import lombok.ToString;
-import sarf.automation.poi.ApplicationCommands.Command;
+import sarf.automation.poi.commands.Command;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -35,8 +34,8 @@ public class FindCellChange extends CellChange {
     return "find";
   }
 
-  public static FindCellChange toFindCellChange(Command command) {
-    List<String> strings = command.getStrings();
+  public static FindCellChange toFindCellChange(Command command, List<String> options) {
+    List<String> strings = options;
     String sheet = strings.get(0);
     String offset = "";
     int valueIndex = 2;

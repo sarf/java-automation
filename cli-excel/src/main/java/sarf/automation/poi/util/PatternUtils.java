@@ -9,7 +9,7 @@ import lombok.NonNull;
 public interface PatternUtils {
 
   static Matcher find(Matcher m) {
-    return FunctionUtils.execute(m, Matcher::find);
+    return FunctionUtils.consumeRecycle(m, Matcher::find);
   }
 
 

@@ -1,5 +1,7 @@
 package sarf.automation.poi.util;
 
+import static sarf.automation.poi.util.PredicateUtils.always;
+
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -46,25 +48,26 @@ public interface FunctionUtils {
     return useDefaultValue.apply(entity) ? defaultValueSupplier.get() : entity;
   }
 
-  static <T> T perform(T entity, Consumer<T> consumer) {
-    if (entity != null) {
-      consumer.accept(entity);
-    }
-    return entity;
-  }
-
-  static <T,U> T perform(T entity, Function<T,U> consumer) {
+  static <T,U> T feedFuncIgnore(T entity, Function<T,U> consumer) {
     if (entity != null) {
       consumer.apply(entity);
     }
     return entity;
   }
 
-  static <T> T perform(T entity, UnaryOperator<T> consumer) {
-    if (entity != null) {
-      consumer.apply(entity);
+  static <T> T perform(T entity, UnaryOperator<T> operator) {
+    return perform(entity, Objects::nonNull, operator);
+  }
+
+  static <T> T perform(T entity, Predicate<T> predicate, UnaryOperator<T> operator) {
+    if (predicate.test(entity)) {
+      return operator.apply(entity);
     }
     return entity;
+  }
+
+  static <T,V> Supplier<V> supplyToFunc(Supplier<T> supplier, Function<T,V> func) {
+    return () -> func.apply(supplier.get());
   }
 
   static <T,U, R> T perform(T entity, U other, BiFunction<T, U, R> consumer) {
@@ -74,11 +77,40 @@ public interface FunctionUtils {
     return entity;
   }
 
-  static <T> T execute(T entity, Consumer<T> consumer) {
-    if (entity != null) {
+  static <T> T consumeRecycle(T consumedYetWhole, Consumer<T> consumer) {
+    return consumeRecycle(consumedYetWhole, Objects::nonNull, consumer);
+  }
+  static <T> T consumeRecycle(T consumedYetWhole, Predicate<T> predicate, Consumer<T> consumer) {
+    if (predicate.test(consumedYetWhole)) {
+      consumer.accept(consumedYetWhole);
+    }
+    return consumedYetWhole;
+  }
+
+  static <T> T doIf(T entity, Predicate<T> predicate, Consumer<T> consumer) {
+    if(predicate.test(entity)) {
       consumer.accept(entity);
     }
     return entity;
   }
 
+  static <T> Supplier<T> doIfS(Supplier<T> entity, Predicate<T> predicate, Consumer<T> consumer) {
+    return () -> doIf(entity.get(), predicate, consumer);
+  }
+
+  static <T> T doIf(T entity, Consumer<T> consumer) {
+    return doIf(entity, always(), consumer);
+  }
+
+  static <T> Supplier<T> doIfS(Supplier<T> entity, Consumer<T> consumer) {
+    return () -> doIf(entity.get(), always(), consumer);
+  }
+
+  static <T> T doIfNN(T entity, Consumer<T> consumer) {
+    return doIf(entity, Objects::nonNull, consumer);
+  }
+
+  static <T> Supplier<T> doIfNNS(Supplier<T> entity, Consumer<T> consumer) {
+    return () -> doIf(entity.get(), Objects::nonNull, consumer);
+  }
 }

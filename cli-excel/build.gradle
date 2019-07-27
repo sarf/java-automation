@@ -6,7 +6,7 @@ plugins {
 group 'sarf.automation.poi'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 12
 
 repositories {
     mavenCentral()

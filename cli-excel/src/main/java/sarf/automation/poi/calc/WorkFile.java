@@ -3,20 +3,27 @@ package sarf.automation.poi.calc;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 import lombok.Data;
 import lombok.NonNull;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import sarf.automation.poi.calc.changehandler.ChangeHandler;
+import sarf.automation.poi.calc.changehandler.FindCellChangeHandler;
 import sarf.automation.poi.calc.changehandler.TextCellChangeHandler;
 import sarf.automation.poi.change.CellChange;
 
 @Data
 public class WorkFile {
 
-  @NonNull private final File workFile;
+  private static final Logger logger = Logger.getLogger(WorkFile.class.getName());
+
+  @NonNull
+  private final File workFile;
 
   private Workbook workbook;
   private SheetHandler sheetHandler;
@@ -32,10 +39,20 @@ public class WorkFile {
     }
   }
 
-  public <T extends CellChange> void handleChange(T change) {
-    if (change == null) return;
-    changeHandlers.get(change.getClass())
-        .perform(this, change);
+  @SuppressWarnings("unchecked")
+  public <T extends CellChange> Collection<T> handleChange(T change) {
+    if (change == null) {
+      return Collections.emptyList();
+    }
+    ChangeHandler changeHandler = changeHandlers.get(change.getClass());
+    if (changeHandler != null) {
+      logger.info(change::describe);
+      return changeHandler.perform(this, change);
+    } else {
+      logger.warning(() -> String
+          .format("did not find a change handler for change %s - change class %s", change, change.getClass()));
+    }
+    return Collections.emptySet();
   }
 
   private static final Map<Class<? extends CellChange>, ChangeHandler> changeHandlers =
@@ -47,6 +64,7 @@ public class WorkFile {
 
   static {
     registerChangeHandler(new TextCellChangeHandler());
+    registerChangeHandler(new FindCellChangeHandler());
   }
 
 }

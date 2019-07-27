@@ -3,12 +3,14 @@ package sarf.automation.poi.util;
 import static sarf.automation.poi.util.StreamUtils.streamFrom;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
+import org.apache.poi.ss.usermodel.Cell;
 
 public class PredicateUtils {
 
@@ -69,6 +71,18 @@ public class PredicateUtils {
     return streamFrom(objects).allMatch(predicate);
   }
 
+  public static <T> Predicate<T> isNull() {
+    return Objects::isNull;
+  }
+
+  public static <T> Predicate<T> notNull() {
+    return Objects::nonNull;
+  }
+
+  public static Predicate<String> eq(String s) {
+    return s::equals;
+  }
+
   @Data
   @Getter(AccessLevel.PROTECTED)
   public static class PredicateUnaryOperator<T> {
@@ -82,5 +96,10 @@ public class PredicateUtils {
       }
       return entity;
     }
+  }
+
+  static <T> Predicate<T> not(Predicate<T> target) {
+    Objects.requireNonNull(target);
+    return target.negate();
   }
 }

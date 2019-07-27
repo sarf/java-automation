@@ -1,20 +1,25 @@
 package sarf.automation.poi.calc;
 
 import static org.junit.Assert.*;
-import static sarf.automation.poi.calc.CalcUtils.rowFactor;
-import static sarf.automation.poi.calc.CalcUtils.rowStringToIndex;
+import static sarf.automation.poi.calc.CalcUtils.columnFactor;
+import static sarf.automation.poi.calc.CalcUtils.columnStringToIndex;
 
 import org.junit.Test;
 
 public class CalcUtilsTest {
 
   @Test
+  public void reverse() {
+    assertEquals("W", CalcUtils.fromColumnIndexToString(22));
+  }
+
+  @Test
   public void rowStringToIndexSingle() {
-    assertEquals(rowFactor, 'Z' - 'A');
-    assertEquals(0, rowStringToIndex("A"));
-    assertEquals(rowFactor, rowStringToIndex("AA"));
-    assertEquals(rowFactor + 1, rowStringToIndex("AB"));
-    assertEquals(rowFactor * rowFactor, rowStringToIndex("AAA"));
+    assertEquals(columnFactor, 'Z' - 'A');
+    assertEquals(0, columnStringToIndex("A"));
+    assertEquals(columnFactor, columnStringToIndex("AA"));
+    assertEquals(columnFactor + 1, columnStringToIndex("AB"));
+    assertEquals(columnFactor * columnFactor, columnStringToIndex("AAA"));
   }
 
 }

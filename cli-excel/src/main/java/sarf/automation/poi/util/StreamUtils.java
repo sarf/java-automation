@@ -1,5 +1,8 @@
 package sarf.automation.poi.util;
 
+import static sarf.automation.poi.util.ArrayUtils.toOpt;
+
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Stream;
 
@@ -7,17 +10,21 @@ public interface StreamUtils {
 
   @SafeVarargs
   static <T> Stream<T> streamFrom(T... args) {
-    if(args == null || args.length <= 0) return Stream.empty();
-    return Stream.of(args);
+    return toOpt(args)
+        .stream()
+        .flatMap(Stream::of);
   }
 
   static <T> Stream<T> streamFrom(Collection<T> args) {
-    if(args == null || args.isEmpty()) return Stream.empty();
-    return args.stream();
+    return CollectionUtils.toOpt(args)
+                          .stream()
+                          .flatMap(Collection::stream);
   }
 
   static <T> Stream<T> streamFrom(Stream<T> args) {
-    if(args == null) return Stream.empty();
+    if (args == null) {
+      return Stream.empty();
+    }
     return args;
   }
 

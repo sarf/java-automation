@@ -3,12 +3,10 @@ package sarf.commons.properties;
 import java.util.Optional;
 import java.util.function.Function;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 
-@AllArgsConstructor
 @Data
 @Getter(AccessLevel.PROTECTED)
 public abstract class StringBasedPropertySource<K, V> implements PropertySource<K, V> {
@@ -21,6 +19,12 @@ public abstract class StringBasedPropertySource<K, V> implements PropertySource<
 
   public StringBasedPropertySource(@NonNull Function<String, V> valueConverter) {
     this(k -> k == null ? null : k.toString(), valueConverter);
+  }
+
+  public StringBasedPropertySource(@NonNull Function<K, String> keyConverter,
+      @NonNull Function<String, V> valueConverter) {
+    this.keyConverter = keyConverter;
+    this.valueConverter = valueConverter;
   }
 
   protected abstract String getString(String key);

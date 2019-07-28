@@ -1,9 +1,7 @@
 package sarf.commons.properties;
 
-import static sarf.commons.properties.StandardPropertyFeature.TYPED_KEYS;
-import static sarf.commons.properties.StandardPropertyFeature.UNTYPED_KEYS;
 import static sarf.commons.util.CollectionUtil.addAll;
-import static sarf.commons.util.CollectionUtil.cross;
+import static sarf.commons.util.CollectionUtil.union;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -11,19 +9,20 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Stream;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 
-@AllArgsConstructor
 @Data
 class ChainedPropertySource<K, V> implements PropertySource<K, V> {
 
   @Getter(AccessLevel.PROTECTED)
   private final Collection<PropertySource<K, V>> propertySources;
+
+  public ChainedPropertySource(@NonNull Collection<PropertySource<K, V>> propertySources) {
+    this.propertySources = Set.copyOf(propertySources);
+  }
 
   @Override
   public Optional<V> get(K key) {
@@ -53,10 +52,7 @@ class ChainedPropertySource<K, V> implements PropertySource<K, V> {
 
   @Override
   public Set<PropertyFeature> features() {
-    return cross(HashSet::new,
-                 Stream.concat(Stream.<PropertyFeature>of(TYPED_KEYS, UNTYPED_KEYS),
-                               Stream.concat(PropertySource.super.features().stream(), propertySources.stream().map(
-                                   PropertySource::features).flatMap(Collection::stream))));
+    return union(propertySources.stream().map(s -> features()));
   }
 
 

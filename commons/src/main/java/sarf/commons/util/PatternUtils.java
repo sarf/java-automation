@@ -1,26 +1,34 @@
-package sarf.automation.poi.util;
+package sarf.commons.util;
+
+import static sarf.commons.util.FunctionConversionUtil.reuse;
 
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import lombok.ToString;
 
 public interface PatternUtils {
 
   static Matcher find(Matcher m) {
-    return FunctionUtils.consumeRecycle(m, Matcher::find);
+    return reuse(m, Matcher::find);
   }
 
-  @Data(staticConstructor = "of")
-  @Getter(AccessLevel.PROTECTED)
+  @EqualsAndHashCode
+  @ToString
   class EasyMatcher {
 
     @NonNull
     private final Matcher matcher;
-
     private boolean found;
+
+    public EasyMatcher(@NonNull Matcher matcher) {
+      this.matcher = matcher;
+    }
+
+    public static EasyMatcher of(@NonNull Matcher matcher) {
+      return new EasyMatcher(matcher);
+    }
 
     public EasyMatcher match() {
       found = matcher.matches();
@@ -29,6 +37,11 @@ public interface PatternUtils {
 
     public EasyMatcher find() {
       found = matcher.find();
+      return this;
+    }
+
+    public EasyMatcher consumeFound(Consumer<Boolean> consumer) {
+      consumer.accept(found);
       return this;
     }
 

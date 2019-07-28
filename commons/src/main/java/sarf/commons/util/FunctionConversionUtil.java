@@ -3,6 +3,7 @@ package sarf.commons.util;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import lombok.NonNull;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -31,14 +32,20 @@ public interface FunctionConversionUtil {
 
   @NotNull
   @Contract(pure = true)
-  static <T, V> Function<T, V> peek(@NonNull Function<T, V> func, @NonNull Consumer<T> voyeur) {
+  static <T, V> Function<T, V> tastetest(@NonNull Function<T, V> func, @NonNull Consumer<T> voyeur) {
     return t -> func.apply(reuse(t, voyeur));
   }
 
   @NotNull
   @Contract(pure = true)
-  static <T, V> Function<T, V> glance(@NonNull Function<T, V> func, @NonNull Consumer<V> voyeur) {
+  static <T, V> Function<T, V> seconds(@NonNull Function<T, V> func, @NonNull Consumer<V> voyeur) {
     return t -> reuse(func.apply(t), voyeur);
+  }
+
+  @NotNull
+  @Contract(pure = true)
+  static <T> UnaryOperator<T> function(@NonNull Consumer<T> consumer) {
+    return t -> reuse(t, consumer);
   }
 
 }

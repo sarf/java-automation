@@ -143,4 +143,5 @@ gradle-app.setting
 
 .idea
 **/.idea
+*/build
 

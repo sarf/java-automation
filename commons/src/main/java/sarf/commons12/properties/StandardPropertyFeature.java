@@ -1,4 +1,4 @@
-package sarf.commons.properties;
+package sarf.commons12.properties;
 
 public enum StandardPropertyFeature implements PropertyFeature {
 

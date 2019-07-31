@@ -1,12 +1,13 @@
-package sarf.commons.util;
+package sarf.commons12.util;
+
+import lombok.NonNull;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
-import lombok.NonNull;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 public interface FunctionConversionUtil {
 
@@ -32,7 +33,7 @@ public interface FunctionConversionUtil {
 
   @NotNull
   @Contract(pure = true)
-  static <T, V> Function<T, V> tastetest(@NonNull Function<T, V> func, @NonNull Consumer<T> voyeur) {
+  static <T, V> Function<T, V> tasteTest(@NonNull Function<T, V> func, @NonNull Consumer<T> voyeur) {
     return t -> func.apply(reuse(t, voyeur));
   }
 

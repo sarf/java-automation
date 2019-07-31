@@ -1,11 +1,12 @@
-package sarf.commons.properties;
+package sarf.commons12.properties;
+
+import lombok.Data;
+import lombok.NonNull;
 
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import lombok.Data;
-import lombok.NonNull;
 
 @Data
 public class EasyProperties<K, V> implements PropertySource<K, V> {

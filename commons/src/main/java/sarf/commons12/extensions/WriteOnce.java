@@ -1,12 +1,14 @@
-package sarf.commons.extensions;
+package sarf.commons12.extensions;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Synchronized;
 
+@SuppressWarnings("WeakerAccess")
 @Data
 @Getter(AccessLevel.NONE)
 @Setter(AccessLevel.NONE)
@@ -68,6 +70,7 @@ public class WriteOnce<T> {
    * @param entity the entity that is wished for
    * @return true if the entity was written to the object, otherwise false
    */
+  @SuppressWarnings("UnusedReturnValue")
   @Synchronized("set")
   public boolean writeIfUnwritten(T entity) {
     if (set.getAndSet(true)) {

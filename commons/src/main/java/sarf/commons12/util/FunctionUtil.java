@@ -1,4 +1,4 @@
-package sarf.commons.util;
+package sarf.commons12.util;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;

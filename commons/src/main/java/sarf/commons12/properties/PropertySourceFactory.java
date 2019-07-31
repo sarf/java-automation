@@ -1,12 +1,13 @@
-package sarf.commons.properties;
+package sarf.commons12.properties;
 
-import static sarf.commons.util.StreamUtil.streamFrom;
+import static sarf.commons12.util.StreamUtil.streamFrom;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 import lombok.NonNull;
 
 public class PropertySourceFactory {

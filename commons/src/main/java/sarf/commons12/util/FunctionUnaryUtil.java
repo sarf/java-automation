@@ -1,11 +1,12 @@
-package sarf.commons.util;
+package sarf.commons12.util;
 
-import static sarf.commons.util.EmptyUtil.isEmpty;
-import static sarf.commons.util.StreamUtil.streamFrom;
+import static sarf.commons12.util.EmptyUtil.isEmpty;
+import static sarf.commons12.util.StreamUtil.streamFrom;
 
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
+
 import lombok.NonNull;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

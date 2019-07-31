@@ -1,11 +1,13 @@
-package sarf.commons.extensions;
+package sarf.commons12.extensions;
 
 import java.time.Instant;
 import java.time.temporal.TemporalUnit;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
 import lombok.NonNull;
 
+@SuppressWarnings("WeakerAccess")
 public class Expires<T> {
 
   private T value;

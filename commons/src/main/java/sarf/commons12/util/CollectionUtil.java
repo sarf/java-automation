@@ -1,8 +1,8 @@
-package sarf.commons.util;
+package sarf.commons12.util;
 
-import static sarf.commons.util.EmptyUtil.isNotEmpty;
-import static sarf.commons.util.OptionalUtil.toOpt;
-import static sarf.commons.util.StreamUtil.streamFrom;
+import static sarf.commons12.util.EmptyUtil.isNotEmpty;
+import static sarf.commons12.util.OptionalUtil.toOpt;
+import static sarf.commons12.util.StreamUtil.streamFrom;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import lombok.NonNull;
 
 public interface CollectionUtil {

@@ -1,21 +1,24 @@
-package sarf.commons.properties;
+package sarf.commons12.properties;
 
-import static sarf.commons.properties.StandardPropertyFeature.UNTYPED_KEYS;
-import static sarf.commons.util.CollectionUtil.cross;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.Data;
-import lombok.NonNull;
 
+import static sarf.commons12.properties.StandardPropertyFeature.UNTYPED_KEYS;
+import static sarf.commons12.util.CollectionUtil.cross;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
 class EnvironmentPropertySource<K, V> extends StringBasedPropertySource<K, V> {
 
-  public EnvironmentPropertySource(@NonNull Function<K, String> keyConverter,
-      @NonNull Function<String, V> valueConverter) {
+  EnvironmentPropertySource(@NonNull Function<K, String> keyConverter,
+                            @NonNull Function<String, V> valueConverter) {
     super(keyConverter, valueConverter);
   }
 
@@ -36,8 +39,8 @@ class EnvironmentPropertySource<K, V> extends StringBasedPropertySource<K, V> {
   @Override
   public Set<PropertyFeature> features() {
     return cross(HashSet::new,
-                 Stream.concat(Stream.of(UNTYPED_KEYS),
-                               super.features().stream()));
+            Stream.concat(Stream.of(UNTYPED_KEYS),
+                    super.features().stream()));
   }
 
 

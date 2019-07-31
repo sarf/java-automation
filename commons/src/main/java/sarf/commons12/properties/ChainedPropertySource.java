@@ -1,7 +1,7 @@
-package sarf.commons.properties;
+package sarf.commons12.properties;
 
-import static sarf.commons.util.CollectionUtil.addAll;
-import static sarf.commons.util.CollectionUtil.union;
+import static sarf.commons12.util.CollectionUtil.addAll;
+import static sarf.commons12.util.CollectionUtil.union;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -20,7 +21,7 @@ class ChainedPropertySource<K, V> implements PropertySource<K, V> {
   @Getter(AccessLevel.PROTECTED)
   private final Collection<PropertySource<K, V>> propertySources;
 
-  public ChainedPropertySource(@NonNull Collection<PropertySource<K, V>> propertySources) {
+  ChainedPropertySource(@NonNull Collection<PropertySource<K, V>> propertySources) {
     this.propertySources = Set.copyOf(propertySources);
   }
 

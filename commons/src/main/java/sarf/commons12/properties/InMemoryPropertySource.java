@@ -1,25 +1,22 @@
-package sarf.commons.properties;
+package sarf.commons12.properties;
 
-import static sarf.commons.properties.StandardPropertyFeature.TYPED_KEYS;
-import static sarf.commons.properties.StandardPropertyFeature.UNTYPED_KEYS;
-import static sarf.commons.util.CollectionUtil.cross;
-import static sarf.commons.util.OptionalUtil.toOpt;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Stream;
 import lombok.Data;
 import lombok.NonNull;
+
+import java.util.*;
+import java.util.stream.Stream;
+
+import static sarf.commons12.properties.StandardPropertyFeature.TYPED_KEYS;
+import static sarf.commons12.properties.StandardPropertyFeature.UNTYPED_KEYS;
+import static sarf.commons12.util.CollectionUtil.cross;
+import static sarf.commons12.util.OptionalUtil.toOpt;
 
 @Data
 class InMemoryPropertySource<K, V> implements PropertySource<K, V> {
 
   private final Map<K, V> map;
 
-  public InMemoryPropertySource(@NonNull Map<K, V> map) {
+  InMemoryPropertySource(@NonNull Map<K, V> map) {
     this.map = Map.copyOf(map);
   }
 

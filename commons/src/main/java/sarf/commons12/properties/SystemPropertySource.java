@@ -1,17 +1,20 @@
-package sarf.commons.properties;
+package sarf.commons12.properties;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.Data;
-import lombok.NonNull;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 class SystemPropertySource<K, V> extends StringBasedPropertySource<K, V> {
 
-  public SystemPropertySource(@NonNull Function<K, String> keyConverter,
-      @NonNull Function<String, V> valueConverter) {
+  SystemPropertySource(@NonNull Function<K, String> keyConverter,
+                       @NonNull Function<String, V> valueConverter) {
     super(keyConverter, valueConverter);
   }
 

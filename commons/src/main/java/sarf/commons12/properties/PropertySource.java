@@ -1,4 +1,6 @@
-package sarf.commons.properties;
+package sarf.commons12.properties;
+
+import lombok.NonNull;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -6,7 +8,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import lombok.NonNull;
 
 public interface PropertySource<K, V> {
 

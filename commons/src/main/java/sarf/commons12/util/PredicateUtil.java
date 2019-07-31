@@ -1,9 +1,9 @@
-package sarf.commons.util;
-
-import static sarf.commons.util.StreamUtil.streamFrom;
+package sarf.commons12.util;
 
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+
+import static sarf.commons12.util.StreamUtil.streamFrom;
 
 public interface PredicateUtil {
 

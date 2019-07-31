@@ -1,19 +1,22 @@
-package sarf.commons.util;
+package sarf.commons12.util;
 
-import static sarf.commons.util.FunctionConversionUtil.reuse;
+import static sarf.commons12.util.FunctionConversionUtil.reuse;
 
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
+
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
 
 public interface PatternUtils {
 
+  @SuppressWarnings("ResultOfMethodCallIgnored")
   static Matcher find(Matcher m) {
     return reuse(m, Matcher::find);
   }
 
+  @SuppressWarnings("WeakerAccess")
   @EqualsAndHashCode
   @ToString
   class EasyMatcher {

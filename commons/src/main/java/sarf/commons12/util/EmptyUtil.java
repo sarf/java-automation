@@ -1,9 +1,15 @@
-package sarf.commons.util;
+package sarf.commons12.util;
 
-import java.util.Collection;
 import org.jetbrains.annotations.Contract;
 
+import java.util.Collection;
+
+@SuppressWarnings("WeakerAccess")
 public class EmptyUtil {
+
+  private EmptyUtil() {
+    throw new UnsupportedOperationException();
+  }
 
   @Contract(value = "null -> true", pure = true)
   @SafeVarargs

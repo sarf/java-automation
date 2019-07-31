@@ -1,8 +1,9 @@
-package sarf.commons.extensions;
+package sarf.commons12.extensions;
 
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import lombok.NonNull;
 import lombok.Setter;
 
 @Data
+@SuppressWarnings("WeakerAccess")
 public class FiniteSupplier<V> implements Supplier<V> {
 
   @Getter(AccessLevel.PROTECTED)

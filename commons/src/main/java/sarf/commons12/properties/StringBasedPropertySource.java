@@ -1,7 +1,8 @@
-package sarf.commons.properties;
+package sarf.commons12.properties;
 
 import java.util.Optional;
 import java.util.function.Function;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -17,11 +18,11 @@ public abstract class StringBasedPropertySource<K, V> implements PropertySource<
   @NonNull
   private final Function<String, V> valueConverter;
 
-  public StringBasedPropertySource(@NonNull Function<String, V> valueConverter) {
+  StringBasedPropertySource(@NonNull Function<String, V> valueConverter) {
     this(k -> k == null ? null : k.toString(), valueConverter);
   }
 
-  public StringBasedPropertySource(@NonNull Function<K, String> keyConverter,
+  StringBasedPropertySource(@NonNull Function<K, String> keyConverter,
       @NonNull Function<String, V> valueConverter) {
     this.keyConverter = keyConverter;
     this.valueConverter = valueConverter;

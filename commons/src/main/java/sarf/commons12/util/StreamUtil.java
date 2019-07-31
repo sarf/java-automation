@@ -1,10 +1,11 @@
-package sarf.commons.util;
+package sarf.commons12.util;
 
-import static sarf.commons.util.CollectionUtil.collOpt;
+import lombok.NonNull;
 
 import java.util.Collection;
 import java.util.stream.Stream;
-import lombok.NonNull;
+
+import static sarf.commons12.util.CollectionUtil.collOpt;
 
 public interface StreamUtil {
 

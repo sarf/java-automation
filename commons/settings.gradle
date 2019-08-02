@@ -1,0 +1,9 @@
+pluginManagement() {
+    repositories {
+        mavenCentral()
+        jcenter()
+        gradlePluginPortal()
+        google()
+    }
+}
+rootProject.name = 'commons'

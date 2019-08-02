@@ -11,7 +11,8 @@ import java.util.stream.Collectors;
 
 public interface PropertySource<K, V> {
 
-  Optional<V> get(K key);
+    @NonNull
+    Optional<V> get(K key);
 
   default V get(K key, @NonNull Supplier<V> defaultValue) {
     return get(key).orElseGet(defaultValue);
@@ -21,16 +22,19 @@ public interface PropertySource<K, V> {
     return get(key).orElse(defaultValue);
   }
 
-  default Set<K> keySet() {
-    return Collections.emptySet();
-  }
+    @NonNull
+    default Set<K> keySet() {
+        return Collections.emptySet();
+    }
 
-  default Set<K> keySetFromUntyped(@NonNull Function<Object, K> converter) {
-    return keySet().stream().map(converter).collect(Collectors.toSet());
-  }
+    @NonNull
+    default Set<K> keySetFromUntyped(@NonNull Function<Object, K> converter) {
+        return keySet().stream().map(converter).collect(Collectors.toSet());
+    }
 
-  default Set<PropertyFeature> features() {
-    return Collections.emptySet();
-  }
+    @NonNull
+    default Set<PropertyFeature> features() {
+        return Collections.emptySet();
+    }
 
 }

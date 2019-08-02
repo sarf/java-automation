@@ -10,7 +10,7 @@ class Constants {
   static final Predicate never = any -> false;
   static final Consumer nopConsumer = c -> {
   };
-  static final Supplier nopSupplier = () -> null;
+    static final Supplier nullSupplier = () -> null;
 
   private Constants() {
     throw new UnsupportedOperationException();

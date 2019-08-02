@@ -1,8 +1,9 @@
-package sarf.commons12.properties;
+package sarf.commons12.properties.internal;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import sarf.commons12.properties.PropertyFeature;
 
 import java.util.HashSet;
 import java.util.Properties;

@@ -1,12 +1,13 @@
-package sarf.commons12.properties;
-
-import java.util.Optional;
-import java.util.function.Function;
+package sarf.commons12.properties.internal;
 
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
+import sarf.commons12.properties.PropertySource;
+
+import java.util.Optional;
+import java.util.function.Function;
 
 @Data
 @Getter(AccessLevel.PROTECTED)

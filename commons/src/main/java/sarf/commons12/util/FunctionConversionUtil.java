@@ -49,4 +49,16 @@ public interface FunctionConversionUtil {
     return t -> reuse(t, consumer);
   }
 
+  @NotNull
+  @Contract(pure = true)
+  static <K, T> Function<K, T> function(@NonNull Supplier<T> supplier) {
+    return t -> supplier.get();
+  }
+
+  @NotNull
+  @Contract(pure = true)
+  static <T> UnaryOperator<T> unaryoperator(@NonNull Supplier<T> supplier) {
+    return t -> supplier.get();
+  }
+
 }

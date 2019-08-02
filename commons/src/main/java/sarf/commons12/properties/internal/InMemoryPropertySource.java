@@ -1,7 +1,9 @@
-package sarf.commons12.properties;
+package sarf.commons12.properties.internal;
 
 import lombok.Data;
 import lombok.NonNull;
+import sarf.commons12.properties.PropertyFeature;
+import sarf.commons12.properties.PropertySource;
 
 import java.util.*;
 import java.util.stream.Stream;

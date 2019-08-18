@@ -1,6 +1,6 @@
 package sarf.automation.events.imap;
 
-import sarf.automation.events.mail.NewMailEvent;
+import sarf.automation.events.mail.MailEventNew;
 
 public interface IMAPEventSourceListener {
 
@@ -8,6 +8,6 @@ public interface IMAPEventSourceListener {
 
   void closing(IMAPEventSource source);
 
-  void newMailEvent(NewMailEvent newMailEvent);
+  void newMailEvent(MailEventNew mailEventNew);
 
 }

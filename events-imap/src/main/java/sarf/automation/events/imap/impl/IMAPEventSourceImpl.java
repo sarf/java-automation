@@ -1,7 +1,6 @@
 package sarf.automation.events.imap.impl;
 
 import static java.util.logging.Logger.getLogger;
-import static sarf.automation.events.imap.config.requirements.CommonCapabilities.SSLTLS;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -34,10 +33,11 @@ import sarf.automation.events.imap.IMAPException;
 import sarf.automation.events.imap.config.IMAPConfig;
 import sarf.automation.events.imap.config.authentication.IMAPAuthentication.AuthenticationType;
 import sarf.automation.events.imap.config.authentication.IMAPAuthenticationUsernamePassword;
+import sarf.automation.events.imap.config.capabilities.security.SSLTLS;
 import sarf.automation.events.imap.listener.FolderStatus;
 import sarf.automation.events.imap.messageinterpreter.MessageInterpreterFactory;
 import sarf.automation.events.mail.Mail;
-import sarf.automation.events.mail.NewMailEvent;
+import sarf.automation.events.mail.MailEventNew;
 
 @Data
 class IMAPEventSourceImpl implements IMAPEventSource {
@@ -86,7 +86,7 @@ class IMAPEventSourceImpl implements IMAPEventSource {
       throw new IllegalArgumentException("Does not know how to connect using " + config.getAuthentication());
     }
     Properties props = System.getProperties();
-    String protocol = config.getCapabilities().contains(SSLTLS) ? "imaps" : "imap";
+    String protocol = config.hasCapability(SSLTLS.class) ? "imaps" : "imap";
     props.setProperty("mail.store.protocol", protocol);
     try {
       Session session = Session.getDefaultInstance(props, null);
@@ -165,12 +165,12 @@ class IMAPEventSourceImpl implements IMAPEventSource {
   }
 
   private void sendEventsFor(QueueEntry entry) {
-    NewMailEvent newMailEvent = new NewMailEvent(this, Arrays.stream(entry.getMessages())
+    MailEventNew mailEventNew = new MailEventNew(this, Arrays.stream(entry.getMessages())
                                                              .map(message -> fromMessageToMail(entry.getFolder(),
                                                                                                message))
                                                              .filter(Objects::nonNull)
                                                              .collect(Collectors.toList()));
-    bridge.newMailEvent(newMailEvent);
+    bridge.newMailEvent(mailEventNew);
   }
 
   private Mail fromMessageToMail(Folder folder, Message message) {

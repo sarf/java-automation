@@ -8,6 +8,6 @@ public interface MailListener {
     return a -> false;
   }
 
-  void newMailEvent(NewMailEvent newMailEvent);
+  void newMailEvent(MailEventNew mailEventNew);
 
 }

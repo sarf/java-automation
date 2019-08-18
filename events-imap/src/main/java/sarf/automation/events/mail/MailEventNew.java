@@ -7,12 +7,12 @@ import lombok.Data;
 import sarf.automation.events.imap.IMAPEventSource;
 
 @Data
-public class NewMailEvent {
+public class MailEventNew {
 
   private final IMAPEventSource source;
   private final Collection<Mail> mails;
 
-  public NewMailEvent(IMAPEventSource source, Collection<Mail> mails) {
+  public MailEventNew(IMAPEventSource source, Collection<Mail> mails) {
     this.source = source;
     this.mails = Collections.unmodifiableList(new ArrayList<>(mails));
   }

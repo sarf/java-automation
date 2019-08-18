@@ -21,7 +21,7 @@ import sarf.automation.events.imap.listener.FolderStatus;
 import sarf.automation.events.imap.listener.MyConnectionListener;
 import sarf.automation.events.imap.listener.MyMessageCountListener;
 import sarf.automation.events.imap.listener.MyStoreListener;
-import sarf.automation.events.mail.NewMailEvent;
+import sarf.automation.events.mail.MailEventNew;
 
 @Getter(AccessLevel.NONE)
 @Setter(AccessLevel.NONE)
@@ -83,8 +83,8 @@ public class IMAPListenerBridge implements IMAPEventSourceListener {
   }
 
   @Override
-  public void newMailEvent(NewMailEvent newMailEvent) {
-    sourceHandler.iterateListeners().forEachRemaining(f -> f.newMailEvent(newMailEvent));
+  public void newMailEvent(MailEventNew mailEventNew) {
+    sourceHandler.iterateListeners().forEachRemaining(f -> f.newMailEvent(mailEventNew));
   }
 
   void addSourceListener(IMAPEventSourceListener sourceListener) {

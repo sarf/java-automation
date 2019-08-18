@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 import sarf.automation.events.imap.IMAPEventSource;
 import sarf.automation.events.imap.IMAPEventSourceListener;
 import sarf.automation.events.mail.Mail;
+import sarf.automation.events.mail.MailEventNew;
 import sarf.automation.events.mail.MailListener;
-import sarf.automation.events.mail.NewMailEvent;
 
 public class IMAPMailListenerFactory {
 
@@ -51,16 +51,16 @@ public class IMAPMailListenerFactory {
     }
 
     @Override
-    public void newMailEvent(NewMailEvent newMailEvent) {
+    public void newMailEvent(MailEventNew mailEventNew) {
       mailListenerHandler.iterateListeners()
-                         .forEachRemaining(ml -> mailDispenser.submit(() -> filterAndCall(ml, newMailEvent)));
+                         .forEachRemaining(ml -> mailDispenser.submit(() -> filterAndCall(ml, mailEventNew)));
     }
 
-    private void filterAndCall(MailListener ml, NewMailEvent newMailEvent) {
-      List<Mail> filtered = newMailEvent.getMails().stream()
+    private void filterAndCall(MailListener ml, MailEventNew mailEventNew) {
+      List<Mail> filtered = mailEventNew.getMails().stream()
                                         .filter(ml.filter())
                                         .collect(Collectors.toList());
-      ml.newMailEvent(new NewMailEvent(newMailEvent.getSource(), filtered));
+      ml.newMailEvent(new MailEventNew(mailEventNew.getSource(), filtered));
     }
   }
 

@@ -1,0 +1,11 @@
+pluginManagement {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+    gradlePluginPortal()
+  }
+}
+
+rootProject.name = 'imap'
+
